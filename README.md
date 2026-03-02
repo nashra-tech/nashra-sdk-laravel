@@ -149,6 +149,51 @@ All API responses are mapped to readonly data objects:
 - `CustomField` - fieldName, dataName, type, isRequired
 - `Segment` - name, subscribersCount, storedConditions
 
+## Testing
+
+Since the SDK uses Laravel's HTTP client under the hood, you can use `Http::fake()` to mock API responses in your tests:
+
+```php
+use Illuminate\Support\Facades\Http;
+use Nashra\Sdk\Facades\Nashra;
+
+Http::fake([
+    '*/subscribers' => Http::response([
+        'data' => [
+            [
+                'uuid' => 'test-uuid',
+                'email' => 'john@example.com',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'status' => 'subscribed',
+                'tags' => [],
+            ],
+        ],
+        'meta' => [
+            'current_page' => 1,
+            'last_page' => 1,
+            'total' => 1,
+            'per_page' => 15,
+        ],
+    ]),
+]);
+
+$subscribers = Nashra::subscribers()->list();
+```
+
+You can also mock specific scenarios like validation errors:
+
+```php
+Http::fake([
+    '*/subscribers' => Http::response([
+        'error' => [
+            'message' => 'Validation failed',
+            'details' => ['email' => ['The email must be a valid email address.']],
+        ],
+    ], 422),
+]);
+```
+
 ## License
 
 MIT
