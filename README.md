@@ -5,7 +5,7 @@ Official PHP SDK for the [Nashra](https://nashra.ai) API.
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11 or 12
+- Laravel 11, 12, or 13 (Laravel 13 requires PHP 8.3+)
 
 ## Installation
 
